@@ -1,0 +1,6 @@
+@Reforge_HostAddress = http://localhost:5265
+
+GET {{Reforge_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###

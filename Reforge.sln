@@ -1,0 +1,25 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.9.34616.47
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Reforge", "Reforge\Reforge.csproj", "{DFFEE3C3-467A-4A61-8326-E0EDFE821764}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{DFFEE3C3-467A-4A61-8326-E0EDFE821764}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{DFFEE3C3-467A-4A61-8326-E0EDFE821764}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{DFFEE3C3-467A-4A61-8326-E0EDFE821764}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{DFFEE3C3-467A-4A61-8326-E0EDFE821764}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {7B5E4F10-D850-44E1-9335-FA67E5015AA1}
+	EndGlobalSection
+EndGlobal
