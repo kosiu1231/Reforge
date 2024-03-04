@@ -3,6 +3,8 @@ global using Reforge.Models;
 global using Reforge.Data;
 global using Reforge.Dtos;
 global using AutoMapper;
+global using Reforge.Dtos.Game;
+global using Reforge.Dtos.Mod;
 using Microsoft.OpenApi.Models;
 using Swashbuckle.AspNetCore.Filters;
 using Microsoft.AspNetCore.Authentication.JwtBearer;

@@ -21,7 +21,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Dtos\Game\" />
     <Folder Include="Dtos\Comment\" />
   </ItemGroup>
 
