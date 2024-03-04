@@ -5,6 +5,7 @@ global using Reforge.Dtos;
 global using AutoMapper;
 global using Reforge.Dtos.Game;
 global using Reforge.Dtos.Mod;
+global using Reforge.Services.GameService;
 using Microsoft.OpenApi.Models;
 using Swashbuckle.AspNetCore.Filters;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
@@ -33,6 +34,7 @@ builder.Services.AddSwaggerGen(c =>
 });
 builder.Services.AddAutoMapper(typeof(Program).Assembly);
 builder.Services.AddScoped<IAuthRepository, AuthRepository>();
+builder.Services.AddScoped<IGameService, GameService>();
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
     .AddJwtBearer(options =>
     {
