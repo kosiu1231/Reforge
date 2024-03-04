@@ -16,7 +16,10 @@ namespace Reforge.Controllers
         [HttpPost]
         public async Task<ActionResult<ServiceResponse<GameDto>>> AddGame(GameDto newGame)
         {
-            return Ok(await _gameService.AddGame(newGame));
+            var response = await _gameService.AddGame(newGame);
+            if(response.Data is null)
+                return BadRequest(response);
+            return Ok();
         }
     }
 }

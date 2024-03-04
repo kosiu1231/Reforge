@@ -23,7 +23,6 @@
   <ItemGroup>
     <Folder Include="Dtos\Comment\" />
     <Folder Include="Services\CommentService\" />
-    <Folder Include="Services\ModService\" />
   </ItemGroup>
 
 </Project>

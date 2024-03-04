@@ -9,6 +9,6 @@
         public List<Comment>? Comments { get; set; }
         public Game? Game { get; set; }
         public int Likes { get; set; } = 0;
-        public string? ImageUrl { get; set; } = string.Empty;
+        public string? ImageUrl { get; set; } = "https://i.ibb.co/L0dNKsp/defaultimg.png";
     }
 }
