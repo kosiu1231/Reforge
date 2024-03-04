@@ -5,7 +5,8 @@
         public AutoMapperProfile()
         {
             CreateMap<Mod, GetModDto>();
-            CreateMap<Game, GetGameDto>();
+            CreateMap<Game, GameDto>();
+            CreateMap<GameDto, Game>();
         }
     }
 }

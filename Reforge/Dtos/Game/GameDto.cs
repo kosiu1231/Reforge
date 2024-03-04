@@ -1,6 +1,6 @@
 ﻿namespace Reforge.Dtos.Game
 {
-    public class GetGameDto
+    public class GameDto
     {
         public string Name { get; set; } = string.Empty;
     }
