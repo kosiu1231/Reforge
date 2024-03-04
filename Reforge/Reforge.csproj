@@ -20,4 +20,9 @@
     <PackageReference Include="Swashbuckle.AspNetCore.Filters" Version="8.0.1" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Dtos\Game\" />
+    <Folder Include="Dtos\Comment\" />
+  </ItemGroup>
+
 </Project>
