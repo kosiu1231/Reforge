@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace Reforge.Models
+namespace Reforge.Dtos
 {
     public class UserLoginRequest
     {

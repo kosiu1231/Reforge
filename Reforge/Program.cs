@@ -1,6 +1,7 @@
 global using Microsoft.EntityFrameworkCore;
 global using Reforge.Models;
 global using Reforge.Data;
+global using Reforge.Dtos;
 using Microsoft.OpenApi.Models;
 using Swashbuckle.AspNetCore.Filters;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
