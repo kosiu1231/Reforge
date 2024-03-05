@@ -7,6 +7,7 @@
             CreateMap<Mod, GetModDto>();
             CreateMap<AddModDto, Mod>();
             CreateMap<Game, GameDto>();
+            CreateMap<Game, GameModsDto>();
             CreateMap<GameDto, Game>();
         }
     }

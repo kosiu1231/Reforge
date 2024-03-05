@@ -19,7 +19,16 @@ namespace Reforge.Controllers
             var response = await _gameService.AddGame(newGame);
             if(response.Data is null)
                 return BadRequest(response);
-            return Ok();
+            return Ok(response);
+        }
+
+        [HttpGet("{name}")]
+        public async Task<ActionResult<ServiceResponse<List<GetModDto>>>> GetGameMods(string name)
+        {
+            var response = await _gameService.GetGameMods(name);
+            if (response.Data is null)
+                return NotFound(response);
+            return Ok(response);
         }
     }
 }

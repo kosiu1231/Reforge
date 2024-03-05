@@ -1,4 +1,6 @@
 ﻿
+using Reforge.Models;
+
 namespace Reforge.Services.GameService
 {
     public class GameService : IGameService
@@ -29,6 +31,33 @@ namespace Reforge.Services.GameService
                 await _context.SaveChangesAsync();
 
                 response.Data = _mapper.Map<GameDto>(game);
+            }
+            catch (Exception ex)
+            {
+                response.Success = false;
+                response.Message = ex.Message;
+            }
+            return response;
+        }
+
+        public async Task<ServiceResponse<List<GetModDto>>> GetGameMods(string name)
+        {
+            var response = new ServiceResponse<List<GetModDto>>();
+
+            try
+            {
+                var mods = await _context.Mods
+                    //.Include(c => c.Comments)
+                    .Where(m => m.Game!.Name == name).ToListAsync();
+
+                if (mods.Count == 0)
+                {
+                    response.Success = false;
+                    response.Message = "Mods not found";
+                    return response;
+                }
+
+                response.Data = mods.Select(m => _mapper.Map<GetModDto>(m)).ToList();
             }
             catch (Exception ex)
             {
