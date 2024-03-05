@@ -1,10 +1,11 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using Reforge.Services.GameService;
 
 namespace Reforge.Controllers
 {
     [ApiController]
-    [Route("[controller]")]
+    [Route("api")]
     public class GameController : ControllerBase
     {
         private readonly IGameService _gameService;
@@ -13,7 +14,8 @@ namespace Reforge.Controllers
             _gameService = gameService;
         }
 
-        [HttpPost]
+        [Authorize]
+        [HttpPost("game")]
         public async Task<ActionResult<ServiceResponse<GameDto>>> AddGame(GameDto newGame)
         {
             var response = await _gameService.AddGame(newGame);
@@ -22,7 +24,7 @@ namespace Reforge.Controllers
             return Ok(response);
         }
 
-        [HttpGet("{name}")]
+        [HttpGet("game/{name}/mods")]
         public async Task<ActionResult<ServiceResponse<List<GetModDto>>>> GetGameMods(string name)
         {
             var response = await _gameService.GetGameMods(name);

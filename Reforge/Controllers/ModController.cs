@@ -4,9 +4,8 @@ using Reforge.Services.ModService;
 
 namespace Reforge.Controllers
 {
-    [Authorize]
     [ApiController]
-    [Route("[controller]")]
+    [Route("api")]
     public class ModController : ControllerBase
     {
         private readonly IModService _modService;
@@ -16,7 +15,8 @@ namespace Reforge.Controllers
             _modService = modService;
         }
 
-        [HttpPost]
+        [Authorize]
+        [HttpPost("mod")]
         public async Task<ActionResult<ServiceResponse<GetModDto>>> AddMod(AddModDto newMod)
         {
             var response = await _modService.AddMod(newMod);
@@ -25,5 +25,13 @@ namespace Reforge.Controllers
             return Ok(response);
         }
 
+        [HttpGet("mods")]
+        public async Task<ActionResult<ServiceResponse<List<GetModDto>>>> GetMods()
+        {
+            var response = await _modService.GetMods();
+            if (response.Data is null)
+                return NotFound(response);
+            return Ok(response);
+        }
     }
 }
