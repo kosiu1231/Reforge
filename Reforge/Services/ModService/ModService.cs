@@ -54,6 +54,7 @@ namespace Reforge.Services.ModService
             {
                 var mods = await _context.Mods
                     .Include(g => g.Game)
+                    .Include(c => c.Creator)
                     .Include(c => c.Comments).ToListAsync();
 
                 if (mods.Count == 0)
@@ -80,6 +81,7 @@ namespace Reforge.Services.ModService
             {
                 var mod = await _context.Mods
                     .Include(g => g.Game)
+                    .Include(c => c.Creator)
                     .Include(c => c.Comments)
                     .FirstOrDefaultAsync(m => m.Id == id);
 

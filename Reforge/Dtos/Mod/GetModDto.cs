@@ -1,4 +1,6 @@
-﻿namespace Reforge.Dtos.Mod
+﻿using Reforge.Dtos.User;
+
+namespace Reforge.Dtos.Mod
 {
     public class GetModDto
     {
@@ -7,6 +9,7 @@
         public string Description { get; set; } = string.Empty;
         public List<GetCommentDto>? Comments { get; set; }
         public GameDto? Game { get; set; }
+        public GetUserDto? User { get; set; }
         public int Likes { get; set; } = 0;
         public string? ImageUrl { get; set; } = string.Empty;
     }

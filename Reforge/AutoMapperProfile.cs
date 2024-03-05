@@ -11,6 +11,7 @@
             CreateMap<GameDto, Game>();
             CreateMap<AddCommentDto, Comment>();
             CreateMap<Comment, GetCommentDto>();
+            CreateMap<User, GetUserDto>();
         }
     }
 }

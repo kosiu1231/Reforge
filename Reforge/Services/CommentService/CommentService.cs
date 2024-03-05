@@ -26,7 +26,9 @@ namespace Reforge.Services.CommentService
             try
             {
                 var comment = _mapper.Map<Comment>(newComment);
-                var mod = await _context.Mods.FirstOrDefaultAsync(m => m.Id == comment.ModId);
+                var mod = await _context.Mods
+                    .Include(c => c.Creator)
+                    .FirstOrDefaultAsync(m => m.Id == comment.ModId);
                 comment.User = await _context.Users.FirstOrDefaultAsync(u => u.Id == GetUserId());
                 comment.Mod = mod;
 
@@ -56,6 +58,7 @@ namespace Reforge.Services.CommentService
             try
             {
                 var comments = await _context.Comments
+                    .Include(u => u.User)
                     .Where(c => c.User!.Username == name).ToListAsync();
 
                 if (comments.Count == 0)
