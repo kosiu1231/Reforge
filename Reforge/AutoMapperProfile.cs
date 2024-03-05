@@ -9,6 +9,8 @@
             CreateMap<Game, GameDto>();
             CreateMap<Game, GameModsDto>();
             CreateMap<GameDto, Game>();
+            CreateMap<AddCommentDto, Comment>();
+            CreateMap<Comment, GetCommentDto>();
         }
     }
 }
