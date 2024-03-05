@@ -47,6 +47,7 @@ namespace Reforge.Services.GameService
             try
             {
                 var mods = await _context.Mods
+                    .Include(g => g.Game)
                     //.Include(c => c.Comments)
                     .Where(m => m.Game!.Name == name).ToListAsync();
 
