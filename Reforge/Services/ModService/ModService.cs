@@ -72,5 +72,32 @@ namespace Reforge.Services.ModService
             }
             return response;
         }
+
+        public async Task<ServiceResponse<GetModDto>> GetMod(int id)
+        {
+            var response = new ServiceResponse<GetModDto>();
+            try
+            {
+                var mod = await _context.Mods
+                    .Include(g => g.Game)
+                    .Include(c => c.Comments)
+                    .FirstOrDefaultAsync(m => m.Id == id);
+
+                if (mod is null)
+                {
+                    response.Success = false;
+                    response.Message = "Mod not found";
+                    return response;
+                }
+
+                response.Data = _mapper.Map<GetModDto>(mod);
+            }
+            catch (Exception ex)
+            {
+                response.Success = false;
+                response.Message = ex.Message;
+            }
+            return response;
+        }
     }
 }

@@ -33,5 +33,14 @@ namespace Reforge.Controllers
                 return NotFound(response);
             return Ok(response);
         }
+
+        [HttpGet("mod/{id}")]
+        public async Task<ActionResult<ServiceResponse<GetModDto>>> GetMod(int id)
+        {
+            var response = await _modService.GetMod(id);
+            if (response.Data is null)
+                return NotFound(response);
+            return Ok(response);
+        }
     }
 }
