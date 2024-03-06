@@ -42,5 +42,15 @@ namespace Reforge.Controllers
                 return NotFound(response);
             return Ok(response);
         }
+
+        [Authorize]
+        [HttpPut("comment")]
+        public async Task<ActionResult<ServiceResponse<GetModDto>>> UpdateComment(UpdateCommentDto updatedComment)
+        {
+            var response = await _commentService.UpdateComment(updatedComment);
+            if (response.Data is null)
+                return NotFound(response);
+            return Ok(response);
+        }
     }
 }

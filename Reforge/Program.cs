@@ -22,6 +22,7 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddDbContext<DataContext>(options =>
 {
     options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"));
+    //remove it later and change cors 
     options.EnableSensitiveDataLogging();
 });
 builder.Services.AddControllers();

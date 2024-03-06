@@ -125,5 +125,47 @@ namespace Reforge.Services.CommentService
             }
             return response;
         }
+
+        public async Task<ServiceResponse<GetModDto>> UpdateComment(UpdateCommentDto updatedComment)
+        {
+            var response = new ServiceResponse<GetModDto>();
+            try
+            {
+                //User who created comment or admin
+                var comment = await _context.Comments.FirstOrDefaultAsync(c => c.Id == updatedComment.Id
+                && (c.User!.Id == GetUserId() || GetUserRole() == "Admin"));
+                await Console.Out.WriteLineAsync(GetUserRole());
+                if (comment is null)
+                {
+                    response.Success = false;
+                    response.Message = "Comment not found";
+                    return response;
+                }
+
+                var mod = await _context.Mods
+                    .Include(c => c.Creator)
+                    .Include(g => g.Game)
+                    .Include(c => c.Comments)
+                    .FirstOrDefaultAsync(m => m.Comments!.Any(c => c.Id == updatedComment.Id));
+
+                if (mod is null)
+                {
+                    response.Success = false;
+                    response.Message = "Mod not found";
+                    return response;
+                }
+
+                comment.Text = updatedComment.Text;
+                await _context.SaveChangesAsync();
+
+                response.Data = _mapper.Map<GetModDto>(mod);
+            }
+            catch (Exception ex)
+            {
+                response.Success = false;
+                response.Message = ex.Message;
+            }
+            return response;
+        }
     }
 }
