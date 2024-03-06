@@ -101,5 +101,106 @@ namespace Reforge.Services.ModService
             }
             return response;
         }
+
+        public async Task<ServiceResponse<GetModDto>> LikeMod(int id)
+        {
+            var response = new ServiceResponse<GetModDto>();
+            try
+            {
+                var mod = await _context.Mods
+                    .Include(g => g.Game)
+                    .Include(c => c.Creator)
+                    .Include(c => c.Comments)
+                    .FirstOrDefaultAsync(m => m.Id == id);
+
+                var user = await _context.Users.FirstOrDefaultAsync(u => u.Id == GetUserId());
+
+                if (mod is null)
+                {
+                    response.Success = false;
+                    response.Message = "Mod not found";
+                    return response;
+                } else if(user is null)
+                {
+                    response.Success = false;
+                    response.Message = "User not found";
+                    return response;
+                }
+
+                if (await _context.Likes.AnyAsync(l => l.User!.Id == user!.Id && l.Mod!.Id == mod.Id))
+                {
+                    response.Success = false;
+                    response.Message = "Mod already liked by this user";
+                    return response;
+                }
+
+                var like = new Like
+                {
+                    User = user,
+                    Mod = mod,
+                };
+
+                user!.Likes!.Add(like);
+                mod.Likes!.Add(like);
+                mod.LikeAmount += 1;
+
+                _context.Likes.Add(like);
+                await _context.SaveChangesAsync();
+
+                response.Data = _mapper.Map<GetModDto>(mod);
+            }
+            catch (Exception ex)
+            {
+                response.Success = false;
+                response.Message = ex.Message;
+            }
+            return response;
+        }
+
+        public async Task<ServiceResponse<GetModDto>> DislikeMod(int id)
+        {
+            var response = new ServiceResponse<GetModDto>();
+            try
+            {
+                var mod = await _context.Mods
+                    .Include(g => g.Game)
+                    .Include(c => c.Creator)
+                    .Include(c => c.Comments)
+                    .FirstOrDefaultAsync(m => m.Id == id);
+
+                var user = await _context.Users.FirstOrDefaultAsync(u => u.Id == GetUserId());
+
+                if (mod is null)
+                {
+                    response.Success = false;
+                    response.Message = "Mod not found";
+                    return response;
+                }
+
+                var like = await _context.Likes.FirstOrDefaultAsync(l => l.User!.Id == user!.Id && l.Mod!.Id == mod.Id);
+
+                if (like is null)
+                {
+                    response.Success = false;
+                    response.Message = "Mod not liked by this user";
+                    return response;
+                }
+
+                user!.Likes!.Remove(like);
+                mod.Likes!.Remove(like);
+                mod.LikeAmount -= 1;
+
+                _context.Likes.Remove(like);
+                await _context.SaveChangesAsync();
+
+                response.Data = _mapper.Map<GetModDto>(mod);
+            }
+            catch (Exception ex)
+            {
+                response.Success = false;
+                response.Message = ex.Message;
+            }
+            return response;
+        }
     }
 }

@@ -42,5 +42,25 @@ namespace Reforge.Controllers
                 return NotFound(response);
             return Ok(response);
         }
+
+        [Authorize]
+        [HttpPost("mod/{id}/like")]
+        public async Task<ActionResult<ServiceResponse<GetModDto>>> LikeMod(int id)
+        {
+            var response = await _modService.LikeMod(id);
+            if (response.Data is null)
+                return NotFound(response);
+            return Ok(response);
+        }
+
+        [Authorize]
+        [HttpPost("mod/{id}/dislike")]
+        public async Task<ActionResult<ServiceResponse<GetModDto>>> DislikeMod(int id)
+        {
+            var response = await _modService.DislikeMod(id);
+            if (response.Data is null)
+                return NotFound(response);
+            return Ok(response);
+        }
     }
 }

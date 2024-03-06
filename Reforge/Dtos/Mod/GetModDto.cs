@@ -10,7 +10,7 @@ namespace Reforge.Dtos.Mod
         public List<GetCommentDto>? Comments { get; set; }
         public GameDto? Game { get; set; }
         public GetUserDto? User { get; set; }
-        public int Likes { get; set; } = 0;
+        public int LikeAmount { get; set; } = 0;
         public string? ImageUrl { get; set; } = string.Empty;
     }
 }

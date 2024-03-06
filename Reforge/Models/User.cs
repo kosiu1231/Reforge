@@ -15,5 +15,6 @@ namespace Reforge.Models
         public DateTime? ResetTokenExpires { get; set; }
         public UserRole? Role { get; set; } = null;
         public List<Mod>? Mods { get; set; }
+        public List<Like>? Likes { get; set; } = new List<Like>();
     }
 }
