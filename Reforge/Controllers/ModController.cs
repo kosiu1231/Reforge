@@ -64,6 +64,16 @@ namespace Reforge.Controllers
         }
 
         [Authorize]
+        [HttpDelete("mod")]
+        public async Task<ActionResult<ServiceResponse<string>>> DeleteComment(int id)
+        {
+            var response = await _modService.DeleteComment(id);
+            if (response.Data is null)
+                return NotFound(response);
+            return Ok(response);
+        }
+
+        [Authorize]
         [HttpPut("mod")]
         public async Task<ActionResult<ServiceResponse<GetModDto>>> UpdateMod(UpdateModDto updatedMod)
         {

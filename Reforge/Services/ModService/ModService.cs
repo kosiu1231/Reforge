@@ -236,5 +236,34 @@ namespace Reforge.Services.ModService
             }
             return response;
         }
+
+        public async Task<ServiceResponse<string>> DeleteComment(int id)
+        {
+            var response = new ServiceResponse<string>();
+            try
+            {
+                //User who created comment or admin
+                var mod = await _context.Mods.FirstOrDefaultAsync(m => m.Id == id
+                && (m.Creator!.Id == GetUserId() || GetUserRole() == "Admin"));
+
+                if (mod is null)
+                {
+                    response.Success = false;
+                    response.Message = "Mod not found";
+                    return response;
+                }
+
+                _context.Mods.Remove(mod);
+                await _context.SaveChangesAsync();
+
+                response.Data = "Mod deleted";
+            }
+            catch (Exception ex)
+            {
+                response.Success = false;
+                response.Message = ex.Message;
+            }
+            return response;
+        }
     }
 }
