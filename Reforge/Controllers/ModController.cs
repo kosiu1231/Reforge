@@ -62,5 +62,15 @@ namespace Reforge.Controllers
                 return NotFound(response);
             return Ok(response);
         }
+
+        [Authorize]
+        [HttpPut("mod")]
+        public async Task<ActionResult<ServiceResponse<GetModDto>>> UpdateMod(UpdateModDto updatedMod)
+        {
+            var response = await _modService.UpdateMod(updatedMod);
+            if (response.Data is null)
+                return NotFound(response);
+            return Ok(response);
+        }
     }
 }

@@ -19,6 +19,9 @@ namespace Reforge.Services.ModService
         private int GetUserId() => int.Parse(_httpContextAccessor.HttpContext!.User
             .FindFirstValue(ClaimTypes.NameIdentifier)!);
 
+        private string GetUserRole() => _httpContextAccessor.HttpContext!.User
+                .FindFirstValue(ClaimTypes.Role)!;
+
         public async Task<ServiceResponse<GetModDto>> AddMod(AddModDto newMod)
         {
             var response = new ServiceResponse<GetModDto>();
@@ -191,6 +194,37 @@ namespace Reforge.Services.ModService
                 mod.LikeAmount -= 1;
 
                 _context.Likes.Remove(like);
+                await _context.SaveChangesAsync();
+
+                response.Data = _mapper.Map<GetModDto>(mod);
+            }
+            catch (Exception ex)
+            {
+                response.Success = false;
+                response.Message = ex.Message;
+            }
+            return response;
+        }
+
+        public async Task<ServiceResponse<GetModDto>> UpdateMod(UpdateModDto updatedMod)
+        {
+            var response = new ServiceResponse<GetModDto>();
+            try
+            {
+                //User who created mod or admin
+                var mod = await _context.Mods.FirstOrDefaultAsync(m => m.Id == updatedMod.Id
+                && (m.Creator!.Id == GetUserId() || GetUserRole() == "Admin"));
+
+                if (mod is null)
+                {
+                    response.Success = false;
+                    response.Message = "Mod not found";
+                    return response;
+                }
+
+                mod.Name = updatedMod.Name;
+                mod.Description = updatedMod.Description;
+                mod.ImageUrl = updatedMod.ImageUrl;
                 await _context.SaveChangesAsync();
 
                 response.Data = _mapper.Map<GetModDto>(mod);

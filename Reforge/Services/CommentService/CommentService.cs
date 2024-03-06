@@ -134,7 +134,7 @@ namespace Reforge.Services.CommentService
                 //User who created comment or admin
                 var comment = await _context.Comments.FirstOrDefaultAsync(c => c.Id == updatedComment.Id
                 && (c.User!.Id == GetUserId() || GetUserRole() == "Admin"));
-                await Console.Out.WriteLineAsync(GetUserRole());
+
                 if (comment is null)
                 {
                     response.Success = false;
