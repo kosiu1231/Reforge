@@ -32,5 +32,15 @@ namespace Reforge.Controllers
                 return NotFound(response);
             return Ok(response);
         }
+
+        [Authorize]
+        [HttpDelete("comment")]
+        public async Task<ActionResult<ServiceResponse<GetModDto>>> DeleteComment(int id)
+        {
+            var response = await _commentService.DeleteComment(id);
+            if (response.Data is null)
+                return NotFound(response);
+            return Ok(response);
+        }
     }
 }

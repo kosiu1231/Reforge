@@ -20,6 +20,9 @@ namespace Reforge.Services.CommentService
         private int GetUserId() => int.Parse(_httpContextAccessor.HttpContext!.User
             .FindFirstValue(ClaimTypes.NameIdentifier)!);
 
+        private string GetUserRole() => _httpContextAccessor.HttpContext!.User
+                .FindFirstValue(ClaimTypes.Role)!;
+
         public async Task<ServiceResponse<GetModDto>> AddComment(AddCommentDto newComment)
         {
             var response = new ServiceResponse<GetModDto>();
@@ -28,6 +31,8 @@ namespace Reforge.Services.CommentService
                 var comment = _mapper.Map<Comment>(newComment);
                 var mod = await _context.Mods
                     .Include(c => c.Creator)
+                    .Include(g => g.Game)
+                    .Include(c => c.Comments)
                     .FirstOrDefaultAsync(m => m.Id == comment.ModId);
                 comment.User = await _context.Users.FirstOrDefaultAsync(u => u.Id == GetUserId());
                 comment.Mod = mod;
@@ -69,6 +74,49 @@ namespace Reforge.Services.CommentService
                 }
 
                 response.Data = comments.Select(c => _mapper.Map<GetCommentDto>(c)).ToList();
+            }
+            catch (Exception ex)
+            {
+                response.Success = false;
+                response.Message = ex.Message;
+            }
+            return response;
+        }
+
+        public async Task<ServiceResponse<GetModDto>> DeleteComment(int id)
+        {
+            var response = new ServiceResponse<GetModDto>();
+            try
+            {
+                //User who created comment or admin
+                var comment = await _context.Comments.FirstOrDefaultAsync(c => c.Id == id
+                && (c.User!.Id == GetUserId() || GetUserRole() == "Admin"));
+
+                if (comment is null)
+                {
+                    response.Success = false;
+                    response.Message = "Comment not found";
+                    return response;
+                }
+
+                var mod = await _context.Mods
+                    .Include(c => c.Creator)
+                    .Include(g => g.Game)
+                    .Include(c => c.Comments)
+                    .FirstOrDefaultAsync(m => m.Comments!.Any(c => c.Id == id));
+
+                if (mod is null)
+                {
+                    response.Success = false;
+                    response.Message = "Mod not found";
+                    return response;
+                }
+
+                mod!.Comments!.Remove(comment);
+                _context.Comments.Remove(comment);
+                await _context.SaveChangesAsync();
+
+                response.Data = _mapper.Map<GetModDto>(mod);
             }
             catch (Exception ex)
             {
