@@ -29,12 +29,12 @@ namespace Reforge.Controllers
         }
 
         [HttpGet("mods")]
-        public async Task<ActionResult<ServiceResponse<List<GetModDto>>>> GetMods()
+        public async Task<ActionResult<ServiceResponse<List<GetModDto>>>> GetMods([FromQuery] QueryObject query)
         {
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
 
-            var response = await _modService.GetMods();
+            var response = await _modService.GetMods(query);
             if (response.Data is null)
                 return NotFound(response);
             return Ok(response);

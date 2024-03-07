@@ -5,7 +5,7 @@ namespace Reforge.Services.ModService
     public interface IModService
     {
         Task<ServiceResponse<GetModDto>> AddMod(AddModDto newMod);
-        Task<ServiceResponse<List<GetModDto>>> GetMods();
+        Task<ServiceResponse<List<GetModDto>>> GetMods(QueryObject query);
         Task<ServiceResponse<GetModDto>> GetMod(int id);
         Task<ServiceResponse<string>> DeleteComment(int id);
         Task<ServiceResponse<GetModDto>> UpdateMod(UpdateModDto updatedMod);

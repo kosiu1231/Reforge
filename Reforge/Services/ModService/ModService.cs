@@ -50,24 +50,27 @@ namespace Reforge.Services.ModService
             return response;
         }
 
-        public async Task<ServiceResponse<List<GetModDto>>> GetMods()
+        public async Task<ServiceResponse<List<GetModDto>>> GetMods(QueryObject query)
         {
             var response = new ServiceResponse<List<GetModDto>>();
             try
             {
-                var mods = await _context.Mods
+                var mods = _context.Mods
                     .Include(g => g.Game)
                     .Include(c => c.Creator)
-                    .Include(c => c.Comments).ToListAsync();
+                    .Include(c => c.Comments).AsQueryable();
 
-                if (mods.Count == 0)
+                if(!string.IsNullOrWhiteSpace(query.Name))
+                    mods = mods.Where(m => m.Name.Contains(query.Name));
+
+                if (mods.Count() == 0)
                 {
                     response.Success = false;
                     response.Message = "No mods found";
                     return response;
                 }
 
-                response.Data = mods.Select(m => _mapper.Map<GetModDto>(m)).ToList();
+                response.Data = await mods.Select(m => _mapper.Map<GetModDto>(m)).ToListAsync();
             }
             catch (Exception ex)
             {

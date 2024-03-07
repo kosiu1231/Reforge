@@ -8,6 +8,7 @@ global using Reforge.Dtos.Game;
 global using Reforge.Dtos.Mod;
 global using Reforge.Dtos.Comment;
 global using Reforge.Dtos.User;
+global using Reforge.Dtos.Helpers;
 global using Reforge.Services.GameService;
 global using Reforge.Services.ModService;
 global using Reforge.Services.CommentService;
