@@ -1,6 +1,4 @@
-﻿using Reforge.Dtos.User;
-
-namespace Reforge.Dtos.Comment
+﻿namespace Reforge.Dtos.Comment
 {
     public class GetCommentDto
     {

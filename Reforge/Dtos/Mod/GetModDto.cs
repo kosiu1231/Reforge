@@ -1,6 +1,4 @@
-﻿using Reforge.Dtos.User;
-
-namespace Reforge.Dtos.Mod
+﻿namespace Reforge.Dtos.Mod
 {
     public class GetModDto
     {

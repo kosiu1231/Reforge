@@ -116,6 +116,8 @@ namespace Reforge.Data
 
             await _context.SaveChangesAsync();
 
+            response.Data = "Password changed";
+
             return response;
         }
 

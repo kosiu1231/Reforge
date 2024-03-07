@@ -1,6 +1,4 @@
-﻿using Reforge.Models;
-
-namespace Reforge.Dtos.Game
+﻿namespace Reforge.Dtos.Game
 {
     public class GameModsDto
     {

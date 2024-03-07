@@ -14,9 +14,12 @@ namespace Reforge.Controllers
             _commentService = commentService;
         }
 
-        [HttpGet("user/{name:string}/comments")]
+        [HttpGet("user/{name}/comments")]
         public async Task<ActionResult<ServiceResponse<List<GetCommentDto>>>> GetUserComments(string name)
         {
+            if (!ModelState.IsValid)
+                return BadRequest(ModelState);
+
             var response = await _commentService.GetUserComments(name);
             if (response.Data is null)
                 return NotFound(response);
@@ -27,6 +30,9 @@ namespace Reforge.Controllers
         [HttpPost("comment")]
         public async Task<ActionResult<ServiceResponse<GetModDto>>> AddComment(AddCommentDto newComment)
         {
+            if (!ModelState.IsValid)
+                return BadRequest(ModelState);
+
             var response = await _commentService.AddComment(newComment);
             if (response.Data is null)
                 return NotFound(response);
@@ -37,6 +43,9 @@ namespace Reforge.Controllers
         [HttpDelete("comment")]
         public async Task<ActionResult<ServiceResponse<GetModDto>>> DeleteComment(int id)
         {
+            if (!ModelState.IsValid)
+                return BadRequest(ModelState);
+
             var response = await _commentService.DeleteComment(id);
             if (response.Data is null)
                 return NotFound(response);
@@ -47,6 +56,9 @@ namespace Reforge.Controllers
         [HttpPut("comment")]
         public async Task<ActionResult<ServiceResponse<GetModDto>>> UpdateComment(UpdateCommentDto updatedComment)
         {
+            if (!ModelState.IsValid)
+                return BadRequest(ModelState);
+
             var response = await _commentService.UpdateComment(updatedComment);
             if (response.Data is null)
                 return NotFound(response);

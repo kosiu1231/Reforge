@@ -19,6 +19,9 @@ namespace Reforge.Controllers
         [HttpPost("mod")]
         public async Task<ActionResult<ServiceResponse<GetModDto>>> AddMod(AddModDto newMod)
         {
+            if (!ModelState.IsValid)
+                return BadRequest(ModelState);
+
             var response = await _modService.AddMod(newMod);
             if (response.Data is null)
                 return NotFound(response);
@@ -28,6 +31,9 @@ namespace Reforge.Controllers
         [HttpGet("mods")]
         public async Task<ActionResult<ServiceResponse<List<GetModDto>>>> GetMods()
         {
+            if (!ModelState.IsValid)
+                return BadRequest(ModelState);
+
             var response = await _modService.GetMods();
             if (response.Data is null)
                 return NotFound(response);
@@ -37,6 +43,9 @@ namespace Reforge.Controllers
         [HttpGet("mod/{id:int}")]
         public async Task<ActionResult<ServiceResponse<GetModDto>>> GetMod(int id)
         {
+            if (!ModelState.IsValid)
+                return BadRequest(ModelState);
+
             var response = await _modService.GetMod(id);
             if (response.Data is null)
                 return NotFound(response);
@@ -47,6 +56,9 @@ namespace Reforge.Controllers
         [HttpPost("mod/{id:int}/like")]
         public async Task<ActionResult<ServiceResponse<GetModDto>>> LikeMod(int id)
         {
+            if (!ModelState.IsValid)
+                return BadRequest(ModelState);
+
             var response = await _modService.LikeMod(id);
             if (response.Data is null)
                 return NotFound(response);
@@ -57,6 +69,9 @@ namespace Reforge.Controllers
         [HttpPost("mod/{id:int}/dislike")]
         public async Task<ActionResult<ServiceResponse<GetModDto>>> DislikeMod(int id)
         {
+            if (!ModelState.IsValid)
+                return BadRequest(ModelState);
+
             var response = await _modService.DislikeMod(id);
             if (response.Data is null)
                 return NotFound(response);
@@ -67,6 +82,9 @@ namespace Reforge.Controllers
         [HttpDelete("mod")]
         public async Task<ActionResult<ServiceResponse<string>>> DeleteComment(int id)
         {
+            if (!ModelState.IsValid)
+                return BadRequest(ModelState);
+
             var response = await _modService.DeleteComment(id);
             if (response.Data is null)
                 return NotFound(response);
@@ -77,6 +95,9 @@ namespace Reforge.Controllers
         [HttpPut("mod")]
         public async Task<ActionResult<ServiceResponse<GetModDto>>> UpdateMod(UpdateModDto updatedMod)
         {
+            if (!ModelState.IsValid)
+                return BadRequest(ModelState);
+
             var response = await _modService.UpdateMod(updatedMod);
             if (response.Data is null)
                 return NotFound(response);
