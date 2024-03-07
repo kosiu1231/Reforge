@@ -34,7 +34,7 @@ namespace Reforge.Controllers
             return Ok(response);
         }
 
-        [HttpGet("mod/{id}")]
+        [HttpGet("mod/{id:int}")]
         public async Task<ActionResult<ServiceResponse<GetModDto>>> GetMod(int id)
         {
             var response = await _modService.GetMod(id);
@@ -44,7 +44,7 @@ namespace Reforge.Controllers
         }
 
         [Authorize]
-        [HttpPost("mod/{id}/like")]
+        [HttpPost("mod/{id:int}/like")]
         public async Task<ActionResult<ServiceResponse<GetModDto>>> LikeMod(int id)
         {
             var response = await _modService.LikeMod(id);
@@ -54,7 +54,7 @@ namespace Reforge.Controllers
         }
 
         [Authorize]
-        [HttpPost("mod/{id}/dislike")]
+        [HttpPost("mod/{id:int}/dislike")]
         public async Task<ActionResult<ServiceResponse<GetModDto>>> DislikeMod(int id)
         {
             var response = await _modService.DislikeMod(id);

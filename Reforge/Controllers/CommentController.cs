@@ -14,7 +14,7 @@ namespace Reforge.Controllers
             _commentService = commentService;
         }
 
-        [HttpGet("user/{name}/comments")]
+        [HttpGet("user/{name:string}/comments")]
         public async Task<ActionResult<ServiceResponse<List<GetCommentDto>>>> GetUserComments(string name)
         {
             var response = await _commentService.GetUserComments(name);

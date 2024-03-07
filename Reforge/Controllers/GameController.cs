@@ -24,7 +24,7 @@ namespace Reforge.Controllers
             return Ok(response);
         }
 
-        [HttpGet("game/{name}/mods")]
+        [HttpGet("game/{name:string}/mods")]
         public async Task<ActionResult<ServiceResponse<List<GetModDto>>>> GetGameMods(string name)
         {
             var response = await _gameService.GetGameMods(name);
