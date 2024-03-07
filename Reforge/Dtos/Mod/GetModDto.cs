@@ -10,5 +10,6 @@
         public int LikeAmount { get; set; } = 0;
         public string? ImageUrl { get; set; } = string.Empty;
         public List<GetCommentDto>? Comments { get; set; }
+        public DateTime CreatedAt { get; set; } = DateTime.Now;
     }
 }
