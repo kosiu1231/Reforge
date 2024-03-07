@@ -1,4 +1,4 @@
-﻿namespace Reforge.Dtos
+﻿namespace Reforge.Dtos.User
 {
     public class UserLoginRequest
     {
