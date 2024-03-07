@@ -78,8 +78,11 @@ namespace Reforge.Services.ModService
                         mods = query.IsDescending ? mods.OrderByDescending(m => m.Name) : mods.OrderBy(m => m.Name);
                     }
                 }
+                int skipNumber = (query.PageNumber - 1) * query.PageSize;
 
-                    if (mods.Count() == 0)
+                mods = mods.Skip(skipNumber).Take(query.PageSize);
+
+                if (mods.Count() == 0)
                 {
                     response.Success = false;
                     response.Message = "No mods found";
