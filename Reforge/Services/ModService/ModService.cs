@@ -63,7 +63,23 @@ namespace Reforge.Services.ModService
                 if(!string.IsNullOrWhiteSpace(query.Name))
                     mods = mods.Where(m => m.Name.Contains(query.Name));
 
-                if (mods.Count() == 0)
+                if (!string.IsNullOrWhiteSpace(query.SortBy))
+                {
+                    if(query.SortBy.Equals("LikeAmount", StringComparison.OrdinalIgnoreCase))
+                    {
+                        mods = query.IsDescending ? mods.OrderByDescending(m => m.LikeAmount) : mods.OrderBy(m => m.LikeAmount);
+                    }
+                    else if (query.SortBy.Equals("CreatedAt", StringComparison.OrdinalIgnoreCase))
+                    {
+                        mods = query.IsDescending ? mods.OrderByDescending(m => m.CreatedAt) : mods.OrderBy(m => m.CreatedAt);
+                    }
+                    else if (query.SortBy.Equals("Name", StringComparison.OrdinalIgnoreCase))
+                    {
+                        mods = query.IsDescending ? mods.OrderByDescending(m => m.Name) : mods.OrderBy(m => m.Name);
+                    }
+                }
+
+                    if (mods.Count() == 0)
                 {
                     response.Success = false;
                     response.Message = "No mods found";
