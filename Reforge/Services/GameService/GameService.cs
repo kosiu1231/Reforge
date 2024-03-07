@@ -68,5 +68,36 @@ namespace Reforge.Services.GameService
             }
             return response;
         }
+
+        public async Task<ServiceResponse<List<GameDto>>> GetGames(QueryObject query)
+        {
+            var response = new ServiceResponse<List<GameDto>>();
+            try
+            {
+                var games = _context.Games.AsQueryable();
+
+                if (!string.IsNullOrWhiteSpace(query.Name))
+                    games = games.Where(g => g.Name.Contains(query.Name));
+
+                int skipNumber = (query.PageNumber - 1) * query.PageSize;
+
+                games = games.Skip(skipNumber).Take(query.PageSize);
+
+                if (games.Count() == 0)
+                {
+                    response.Success = false;
+                    response.Message = "No games found";
+                    return response;
+                }
+
+                response.Data = await games.Select(g => _mapper.Map<GameDto>(g)).ToListAsync();
+            }
+            catch (Exception ex)
+            {
+                response.Success = false;
+                response.Message = ex.Message;
+            }
+            return response;
+        }
     }
 }

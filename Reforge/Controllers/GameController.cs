@@ -27,6 +27,18 @@ namespace Reforge.Controllers
             return Ok(response);
         }
 
+        [HttpGet("games")]
+        public async Task<ActionResult<ServiceResponse<List<GameDto>>>> GetGames([FromQuery] QueryObject query)
+        {
+            if (!ModelState.IsValid)
+                return BadRequest(ModelState);
+
+            var response = await _gameService.GetGames(query);
+            if (response.Data is null)
+                return NotFound(response);
+            return Ok(response);
+        }
+
         [HttpGet("game/{name}/mods")]
         public async Task<ActionResult<ServiceResponse<List<GetModDto>>>> GetGameMods(string name)
         {
