@@ -1,4 +1,6 @@
 ﻿
+using Reforge.Migrations;
+using Reforge.Models;
 using System.Security.Claims;
 
 namespace Reforge.Services.ModService
@@ -259,13 +261,15 @@ namespace Reforge.Services.ModService
             return response;
         }
 
-        public async Task<ServiceResponse<string>> DeleteComment(int id)
+        public async Task<ServiceResponse<string>> DeleteMod(int id)
         {
             var response = new ServiceResponse<string>();
             try
             {
                 //User who created comment or admin
-                var mod = await _context.Mods.FirstOrDefaultAsync(m => m.Id == id
+                var mod = await _context.Mods
+                    .Include(m => m.Likes)
+                    .FirstOrDefaultAsync(m => m.Id == id
                 && (m.Creator!.Id == GetUserId() || GetUserRole() == "Admin"));
 
                 if (mod is null)
@@ -275,6 +279,7 @@ namespace Reforge.Services.ModService
                     return response;
                 }
 
+                _context.Likes.RemoveRange(mod.Likes!);
                 _context.Mods.Remove(mod);
                 await _context.SaveChangesAsync();
 

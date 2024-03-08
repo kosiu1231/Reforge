@@ -80,12 +80,12 @@ namespace Reforge.Controllers
 
         [Authorize]
         [HttpDelete("mod")]
-        public async Task<ActionResult<ServiceResponse<string>>> DeleteComment(int id)
+        public async Task<ActionResult<ServiceResponse<string>>> DeleteMod(int id)
         {
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
 
-            var response = await _modService.DeleteComment(id);
+            var response = await _modService.DeleteMod(id);
             if (response.Data is null)
                 return NotFound(response);
             return Ok(response);
