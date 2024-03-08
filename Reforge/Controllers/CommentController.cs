@@ -1,7 +1,4 @@
-﻿using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Mvc;
-
-namespace Reforge.Controllers
+﻿namespace Reforge.Controllers
 {
     [ApiController]
     [Route("api")]

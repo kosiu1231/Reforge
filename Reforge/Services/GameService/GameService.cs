@@ -1,7 +1,4 @@
-﻿
-using Reforge.Models;
-
-namespace Reforge.Services.GameService
+﻿namespace Reforge.Services.GameService
 {
     public class GameService : IGameService
     {

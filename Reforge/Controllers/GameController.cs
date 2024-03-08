@@ -1,8 +1,4 @@
-﻿using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Mvc;
-using Reforge.Services.GameService;
-
-namespace Reforge.Controllers
+﻿namespace Reforge.Controllers
 {
     [ApiController]
     [Route("api")]

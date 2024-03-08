@@ -1,6 +1,4 @@
-﻿using Microsoft.AspNetCore.Mvc;
-
-namespace Reforge.Services.CommentService
+﻿namespace Reforge.Services.CommentService
 {
     public interface ICommentService
     {

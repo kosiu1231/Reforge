@@ -1,7 +1,4 @@
 ﻿using Azure;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.OpenApi.Models;
-using System.ComponentModel.DataAnnotations;
 
 namespace Reforge.Controllers
 {

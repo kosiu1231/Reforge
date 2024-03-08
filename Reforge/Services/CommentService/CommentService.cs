@@ -1,8 +1,4 @@
-﻿
-
-using System.Security.Claims;
-
-namespace Reforge.Services.CommentService
+﻿namespace Reforge.Services.CommentService
 {
     public class CommentService : ICommentService
     {

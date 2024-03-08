@@ -1,9 +1,11 @@
 global using Microsoft.EntityFrameworkCore;
 global using System.ComponentModel.DataAnnotations;
+global using Microsoft.AspNetCore.Authorization;
+global using Microsoft.AspNetCore.Mvc;
+global using System.Security.Claims;
 global using AutoMapper;
 global using Reforge.Models;
 global using Reforge.Data;
-global using Reforge.Dtos;
 global using Reforge.Dtos.Game;
 global using Reforge.Dtos.Mod;
 global using Reforge.Dtos.Comment;

@@ -1,6 +1,4 @@
-﻿using Microsoft.AspNetCore.Mvc;
-
-namespace Reforge.Services.ModService
+﻿namespace Reforge.Services.ModService
 {
     public interface IModService
     {

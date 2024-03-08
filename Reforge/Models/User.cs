@@ -1,6 +1,4 @@
-﻿using Microsoft.AspNetCore.Identity;
-
-namespace Reforge.Models
+﻿namespace Reforge.Models
 {
     public class User
     {

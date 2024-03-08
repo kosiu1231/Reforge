@@ -1,6 +1,4 @@
-﻿using Reforge.Dtos.Game;
-
-namespace Reforge.Services.GameService
+﻿namespace Reforge.Services.GameService
 {
     public interface IGameService
     {
