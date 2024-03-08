@@ -14,7 +14,7 @@ namespace Reforge.Controllers
             _gameService = gameService;
         }
 
-        [Authorize]
+        [Authorize(Roles = "Admin")]
         [HttpPost("game")]
         public async Task<ActionResult<ServiceResponse<GameDto>>> AddGame(GameDto newGame)
         {
