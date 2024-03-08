@@ -2,6 +2,8 @@
 using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Extensions;
+using SendGrid;
+using SendGrid.Helpers.Mail;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Security.Cryptography;
@@ -71,6 +73,8 @@ namespace Reforge.Data
             await _context.SaveChangesAsync();
             response.Data = user.Email;
 
+            SendVerificationEmail(user.Email, user.Username, user.VerificationToken);
+
             return response;
         }
 
@@ -91,6 +95,8 @@ namespace Reforge.Data
             await _context.SaveChangesAsync();
 
             response.Message = "Token will be valid for 15min";
+
+            SendResetPasswordEmail(user.Email, user.Username, user.PasswordResetToken);
 
             return response;
         }
@@ -212,9 +218,39 @@ namespace Reforge.Data
             string token;
             do
             {
-                token = Convert.ToHexString(RandomNumberGenerator.GetBytes(64));
+                token = Convert.ToHexString(RandomNumberGenerator.GetBytes(24));
             } while ((await _context.Users.AnyAsync(t => t.PasswordResetToken == token)));
             return token;
+        }
+
+        private async void SendVerificationEmail(string email, string username, string verificationToken)
+        {
+            var client = new SendGridClient(_configuration.GetSection("SendGrid:ApiKey").Value);
+            var to = new EmailAddress(email, username);
+            var from = new EmailAddress("reforgemods@proton.me", "Reforge Mods");
+            var message = MailHelper.CreateSingleTemplateEmail(from, to, "d-0626ad7711a647a08d3c9d218424783c", new
+            {
+                emailUsername = username,
+                emailVerifyCode = verificationToken
+            });
+            var emailResponse = await client.SendEmailAsync(message);
+            var emailResponseBody = await emailResponse.Body.ReadAsStringAsync();
+            //log responses
+        }
+
+        private async void SendResetPasswordEmail(string email, string username, string resetToken)
+        {
+            var client = new SendGridClient(_configuration.GetSection("SendGrid:ApiKey").Value);
+            var to = new EmailAddress(email, username);
+            var from = new EmailAddress("reforgemods@proton.me", "Reforge Mods");
+            var message = MailHelper.CreateSingleTemplateEmail(from, to, "d-8ddfcaac969042ae930c617a1d4709eb", new
+            {
+                emailUsername = username,
+                emailResetToken = resetToken
+            });
+            var emailResponse = await client.SendEmailAsync(message);
+            var emailResponseBody = await emailResponse.Body.ReadAsStringAsync();
+            //log responses
         }
     }
 }
