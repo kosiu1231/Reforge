@@ -5,12 +5,14 @@
         private readonly IMapper _mapper;
         private readonly DataContext _context;
         private readonly IHttpContextAccessor _httpContextAccessor;
+        private readonly ILogger<GameService> _logger;
 
-        public GameService(IMapper mapper, DataContext context, IHttpContextAccessor httpContextAccessor)
+        public GameService(IMapper mapper, DataContext context, IHttpContextAccessor httpContextAccessor, ILogger<GameService> logger)
         {
             _context = context;
             _mapper = mapper;
             _httpContextAccessor = httpContextAccessor;
+            _logger = logger;
         }
 
         public async Task<ServiceResponse<GameDto>> AddGame(GameDto newGame)
@@ -94,6 +96,7 @@
                 response.Success = false;
                 response.Message = ex.Message;
             }
+            _logger.LogInformation("Getting games");
             return response;
         }
     }
