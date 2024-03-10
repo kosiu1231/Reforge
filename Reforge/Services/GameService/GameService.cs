@@ -50,7 +50,7 @@
                     .Include(g => g.Game)
                     .Include(c => c.Comments)
                     .Include(c => c.Creator)
-                    .Where(m => m.Game!.Name == name).ToListAsync();
+                    .Where(m => m.Game!.Name.Contains(name)).ToListAsync();
 
                 if (mods.Count == 0)
                 {

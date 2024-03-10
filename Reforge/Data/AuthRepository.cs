@@ -11,9 +11,9 @@ namespace Reforge.Data
     {
         private readonly DataContext _context;
         private readonly IConfiguration _configuration;
-        private readonly ILogger _logger;
+        private readonly ILogger<AuthRepository> _logger;
 
-        public AuthRepository(DataContext context, IConfiguration configuration, ILogger logger)
+        public AuthRepository(DataContext context, IConfiguration configuration, ILogger<AuthRepository> logger)
         {
             _context = context;
             _configuration = configuration;
