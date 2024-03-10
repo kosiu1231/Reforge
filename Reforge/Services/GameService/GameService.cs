@@ -36,6 +36,7 @@
                 response.Success = false;
                 response.Message = ex.Message;
             }
+            _logger.LogInformation($"AddGame({newGame.Name}) invoked.");
             return response;
         }
 
@@ -65,6 +66,7 @@
                 response.Success = false;
                 response.Message = ex.Message;
             }
+            _logger.LogInformation($"GetGameMods({name}) invoked.");
             return response;
         }
 
@@ -96,7 +98,7 @@
                 response.Success = false;
                 response.Message = ex.Message;
             }
-            _logger.LogInformation("Getting games");
+            _logger.LogInformation("GetGames invoked.");
             return response;
         }
     }
