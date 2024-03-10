@@ -11,52 +11,64 @@ namespace Reforge.Data
     {
         private readonly DataContext _context;
         private readonly IConfiguration _configuration;
-        public AuthRepository(DataContext context, IConfiguration configuration)
+        private readonly ILogger _logger;
+
+        public AuthRepository(DataContext context, IConfiguration configuration, ILogger logger)
         {
             _context = context;
             _configuration = configuration;
+            _logger = logger;
         }
 
         public async Task<ServiceResponse<string>> Login(string email, string password)
         {
             var response = new ServiceResponse<string>();
             var user = await _context.Users.FirstOrDefaultAsync(u => u.Email == email);
+            var logMessage = "";
 
             if (user is null)
             {
                 response.Success = false;
                 response.Message = "User not found.";
+                logMessage = $"Login attempt, {email} not found.";
             }
             else if (!VerifyPasswordHash(password, user.PasswordHash, user.PasswordSalt))
             {
                 response.Success = false;
                 response.Message = "Wrong password.";
+                logMessage = $"Login attempt, wrong password for {email}.";
             }
             else if(user.VerifiedAt is null)
             {
                 response.Success = false;
                 response.Message = "Email not verified";
+                logMessage = $"Login attempt, {email} not verified.";
             }
             else
             {
                 response.Data = CreateToken(user);
+                logMessage = $"Login successful, {email}.";
             }
-
+            _logger.LogInformation(logMessage);
             return response;
         }
 
         public async Task<ServiceResponse<string>> Register(User user, string password, string confirmPassword)
         {
             var response = new ServiceResponse<string>();
+            var logMessage = "";
+
             if (await EmailExists(user.Email) || await UsernameExists(user.Username))
             { 
                 response.Success = false;
                 response.Message = "User already exists";
+                logMessage = $"Registering attempt, {user.Email} already exists.";
                 return response;
             }else if(!password.Equals(confirmPassword))
             {
                 response.Success = false;
                 response.Message = "Passwords do not match";
+                logMessage = "Registering attempt, passwords do not match.";
                 return response;
             }
 
@@ -72,6 +84,8 @@ namespace Reforge.Data
 
             SendVerificationEmail(user.Email, user.Username, user.VerificationToken);
 
+            logMessage = $"{user.Email} successfully registered. Verification email sent.";
+            _logger.LogInformation(logMessage);
             return response;
         }
 
@@ -95,6 +109,7 @@ namespace Reforge.Data
 
             SendResetPasswordEmail(user.Email, user.Username, user.PasswordResetToken);
 
+            _logger.LogInformation($"Reset password token sent to {user.Email}.");
             return response;
         }
 
@@ -120,7 +135,7 @@ namespace Reforge.Data
             await _context.SaveChangesAsync();
 
             response.Data = "Password changed";
-
+            _logger.LogInformation($"User's password changed, {user.Email}.");
             return response;
         }
 
@@ -142,6 +157,7 @@ namespace Reforge.Data
             user.Role = UserRole.User;
             await _context.SaveChangesAsync();
 
+            _logger.LogInformation($"Email verified, {user.Email}.");
             return response;
         }
 
@@ -231,8 +247,8 @@ namespace Reforge.Data
                 emailVerifyCode = verificationToken
             });
             var emailResponse = await client.SendEmailAsync(message);
-            var emailResponseBody = await emailResponse.Body.ReadAsStringAsync();
-            //log responses
+            //var emailResponseBody = await emailResponse.Body.ReadAsStringAsync();
+            _logger.LogInformation($"Verification email sent, {email}.");
         }
 
         private async void SendResetPasswordEmail(string email, string username, string resetToken)
@@ -246,8 +262,8 @@ namespace Reforge.Data
                 emailResetToken = resetToken
             });
             var emailResponse = await client.SendEmailAsync(message);
-            var emailResponseBody = await emailResponse.Body.ReadAsStringAsync();
-            //log responses
+            //var emailResponseBody = await emailResponse.Body.ReadAsStringAsync();
+            _logger.LogInformation($"Reset password email sent, {email}.");
         }
     }
 }
