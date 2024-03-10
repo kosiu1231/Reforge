@@ -24,6 +24,7 @@
         public async Task<ServiceResponse<GetModDto>> AddComment(AddCommentDto newComment)
         {
             var response = new ServiceResponse<GetModDto>();
+
             try
             {
                 var comment = _mapper.Map<Comment>(newComment);

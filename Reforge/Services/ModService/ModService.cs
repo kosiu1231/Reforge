@@ -1,4 +1,5 @@
-﻿using System.Security.Claims;
+﻿using Reforge.Models;
+using System.Security.Claims;
 
 namespace Reforge.Services.ModService
 {
@@ -7,12 +8,14 @@ namespace Reforge.Services.ModService
         private readonly IMapper _mapper;
         private readonly DataContext _context;
         private readonly IHttpContextAccessor _httpContextAccessor;
+        private readonly ILogger<ModService> _logger;
 
-        public ModService(IMapper mapper, DataContext context, IHttpContextAccessor httpContextAccessor)
+        public ModService(IMapper mapper, DataContext context, IHttpContextAccessor httpContextAccessor, ILogger<ModService> logger)
         {
             _context = context;
             _httpContextAccessor = httpContextAccessor;
             _mapper = mapper;
+            _logger = logger;
         }
 
         private int GetUserId() => int.Parse(_httpContextAccessor.HttpContext!.User
@@ -24,6 +27,7 @@ namespace Reforge.Services.ModService
         public async Task<ServiceResponse<GetModDto>> AddMod(AddModDto newMod)
         {
             var response = new ServiceResponse<GetModDto>();
+
             try
             {
                 var mod = _mapper.Map<Mod>(newMod);
@@ -46,12 +50,15 @@ namespace Reforge.Services.ModService
                 response.Success = false;
                 response.Message = ex.Message;
             }
+            _logger.LogInformation($"AddMod({newMod.Name}) invoked by {GetUserId()}.");
             return response;
         }
 
         public async Task<ServiceResponse<List<GetModDto>>> GetMods(QueryObject query)
         {
             var response = new ServiceResponse<List<GetModDto>>();
+            string logMessage = "";
+
             try
             {
                 var mods = _context.Mods
@@ -60,7 +67,10 @@ namespace Reforge.Services.ModService
                     .Include(c => c.Comments).AsQueryable();
 
                 if(!string.IsNullOrWhiteSpace(query.Name))
+                {
                     mods = mods.Where(m => m.Name.Contains(query.Name));
+                    logMessage = $"Query.Name used: {query.Name}";
+                }
 
                 if (!string.IsNullOrWhiteSpace(query.SortBy))
                 {
@@ -95,12 +105,14 @@ namespace Reforge.Services.ModService
                 response.Success = false;
                 response.Message = ex.Message;
             }
+            _logger.LogInformation("GetMods invoked. " + logMessage);
             return response;
         }
 
         public async Task<ServiceResponse<GetModDto>> GetMod(int id)
         {
             var response = new ServiceResponse<GetModDto>();
+
             try
             {
                 var mod = await _context.Mods
@@ -123,12 +135,15 @@ namespace Reforge.Services.ModService
                 response.Success = false;
                 response.Message = ex.Message;
             }
+            _logger.LogInformation($"GetMod({id}) invoked. ");
             return response;
         }
 
         public async Task<ServiceResponse<GetModDto>> LikeMod(int id)
         {
             var response = new ServiceResponse<GetModDto>();
+            string logMessage = "";
+
             try
             {
                 var mod = await _context.Mods
@@ -155,6 +170,7 @@ namespace Reforge.Services.ModService
                 {
                     response.Success = false;
                     response.Message = "Mod already liked by this user";
+                    logMessage = $"{user.Id} tried to like mod {mod.Name} second time";
                     return response;
                 }
 
@@ -171,6 +187,7 @@ namespace Reforge.Services.ModService
                 _context.Likes.Add(like);
                 await _context.SaveChangesAsync();
 
+                logMessage = $"{user.Id} likes mod {mod.Name}";
                 response.Data = _mapper.Map<GetModDto>(mod);
             }
             catch (Exception ex)
@@ -178,12 +195,15 @@ namespace Reforge.Services.ModService
                 response.Success = false;
                 response.Message = ex.Message;
             }
+            _logger.LogInformation(logMessage);
             return response;
         }
 
         public async Task<ServiceResponse<GetModDto>> DislikeMod(int id)
         {
             var response = new ServiceResponse<GetModDto>();
+            string logMessage = "";
+
             try
             {
                 var mod = await _context.Mods
@@ -217,6 +237,7 @@ namespace Reforge.Services.ModService
                 _context.Likes.Remove(like);
                 await _context.SaveChangesAsync();
 
+                logMessage = $"{user.Id} dislikes mod {mod.Name}";
                 response.Data = _mapper.Map<GetModDto>(mod);
             }
             catch (Exception ex)
@@ -224,12 +245,14 @@ namespace Reforge.Services.ModService
                 response.Success = false;
                 response.Message = ex.Message;
             }
+            _logger.LogInformation(logMessage);
             return response;
         }
 
         public async Task<ServiceResponse<GetModDto>> UpdateMod(UpdateModDto updatedMod)
         {
             var response = new ServiceResponse<GetModDto>();
+
             try
             {
                 //User who created mod or admin
@@ -255,12 +278,15 @@ namespace Reforge.Services.ModService
                 response.Success = false;
                 response.Message = ex.Message;
             }
+            _logger.LogInformation($"UpdateMod(ID={updatedMod.Id}) invoked by {GetUserId()}.");
             return response;
         }
 
         public async Task<ServiceResponse<string>> DeleteMod(int id)
         {
             var response = new ServiceResponse<string>();
+            string logMessage = "";
+
             try
             {
                 //User who created comment or admin
@@ -276,6 +302,8 @@ namespace Reforge.Services.ModService
                     return response;
                 }
 
+                logMessage = mod.Name;
+
                 _context.Likes.RemoveRange(mod.Likes!);
                 _context.Mods.Remove(mod);
                 await _context.SaveChangesAsync();
@@ -287,6 +315,7 @@ namespace Reforge.Services.ModService
                 response.Success = false;
                 response.Message = ex.Message;
             }
+            _logger.LogInformation($"DeleteMod({logMessage}) invoked by {GetUserId()}.");
             return response;
         }
     }
