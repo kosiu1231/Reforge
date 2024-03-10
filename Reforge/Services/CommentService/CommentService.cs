@@ -5,12 +5,14 @@
         private readonly IMapper _mapper;
         private readonly DataContext _context;
         private readonly IHttpContextAccessor _httpContextAccessor;
+        private readonly ILogger<CommentService> _logger;
 
-        public CommentService(IMapper mapper, DataContext context, IHttpContextAccessor httpContextAccessor)
+        public CommentService(IMapper mapper, DataContext context, IHttpContextAccessor httpContextAccessor, ILogger<CommentService> logger)
         {
             _context = context;
             _mapper = mapper;
             _httpContextAccessor = httpContextAccessor;
+            _logger = logger;
         }
 
         private int GetUserId() => int.Parse(_httpContextAccessor.HttpContext!.User
@@ -49,6 +51,7 @@
                 response.Success = false;
                 response.Message = ex.Message;
             }
+            _logger.LogInformation($"AddComment(Mod={newComment.ModId}, {newComment.Text}) invoked by {GetUserId()}.");
             return response;
         }
 
@@ -76,12 +79,14 @@
                 response.Success = false;
                 response.Message = ex.Message;
             }
+            _logger.LogInformation($"GetUserComments({name}) invoked.");
             return response;
         }
 
         public async Task<ServiceResponse<GetModDto>> DeleteComment(int id)
         {
             var response = new ServiceResponse<GetModDto>();
+            string logMessage = "";
             try
             {
                 //User who created comment or admin
@@ -94,6 +99,8 @@
                     response.Message = "Comment not found";
                     return response;
                 }
+
+                logMessage = comment.Text;
 
                 var mod = await _context.Mods
                     .Include(c => c.Creator)
@@ -119,6 +126,7 @@
                 response.Success = false;
                 response.Message = ex.Message;
             }
+            _logger.LogInformation($"DeleteComment({logMessage}) invoked by {GetUserId()}.");
             return response;
         }
 
@@ -161,6 +169,7 @@
                 response.Success = false;
                 response.Message = ex.Message;
             }
+            _logger.LogInformation($"UpdateComment(ID={updatedComment.Id}, {updatedComment.Text}) invoked by {GetUserId()}.");
             return response;
         }
     }
