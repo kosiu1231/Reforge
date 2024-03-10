@@ -73,12 +73,16 @@
         public async Task<ServiceResponse<List<GameDto>>> GetGames(QueryObject query)
         {
             var response = new ServiceResponse<List<GameDto>>();
+            var logMessage = "";
             try
             {
                 var games = _context.Games.AsQueryable();
 
                 if (!string.IsNullOrWhiteSpace(query.Name))
+                {
                     games = games.Where(g => g.Name.Contains(query.Name));
+                    logMessage = $"Query.Name used: {query.Name}";
+                }
 
                 int skipNumber = (query.PageNumber - 1) * query.PageSize;
 
@@ -98,7 +102,7 @@
                 response.Success = false;
                 response.Message = ex.Message;
             }
-            _logger.LogInformation("GetGames invoked.");
+            _logger.LogInformation("GetGames invoked. " + logMessage);
             return response;
         }
     }
