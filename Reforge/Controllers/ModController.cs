@@ -20,7 +20,7 @@
 
             var response = await _modService.AddMod(newMod);
             if (response.Data is null)
-                return NotFound(response);
+                return BadRequest(response);
             return Ok(response);
         }
 

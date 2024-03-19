@@ -32,7 +32,7 @@
 
             var response = await _commentService.AddComment(newComment);
             if (response.Data is null)
-                return NotFound(response);
+                return BadRequest(response);
             return Ok(response);
         }
 
